@@ -10,8 +10,8 @@
     Frontend 
 
     TypeScript
-    - React JS
+    - React JS ???
     - Three.js
 
     Backend
-    - ???
+    - Golang
