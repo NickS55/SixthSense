@@ -7,6 +7,9 @@
     <title>6th Sense - Login</title>
   </head>
     <body>
+        {{ if . }}
+        <div class="error"> {{ . }}</div>
+        {{ end }}
         <form method='POST'>
             <div>
                 Username:

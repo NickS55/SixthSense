@@ -13,7 +13,7 @@
     - Vanilla JS ???
     - Three.js
     - babylon.js
+    - Stimulus
 
     Backend
     - Golang
-        -github.com/gorilla/mux
