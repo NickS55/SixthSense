@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"github.com/go-redis/redis"
 	"golang.org/x/crypto/bcrypt"
@@ -15,29 +16,99 @@ var (
 	ErrInvalidLogin = errors.New("incorrect password")
 )
 
-// RegisterUser - page to register a user
-func RegisterUser(username, password string) error {
-	ctx := context.TODO()
-	cost := bcrypt.DefaultCost
-	hash, err := bcrypt.GenerateFromPassword([]byte(password), cost)
-	if err != nil {
-		return err
-	}
-	return client.Set(ctx, "user:"+username, hash, 0).Err()
+//User - a user
+type User struct {
+	key string //key into redis db
 }
 
-//AuthenticateUser - make sure authentication works
-func AuthenticateUser(username, password string) error {
+
+//NewUser - creates a new User
+func NewUser(username string, hash []byte) (*User, error) {
 	ctx := context.TODO()
-	hash, err := client.Get(ctx, "user:"+username).Bytes()
-	if err == redis.Nil {
-		return ErrUserNotFound
-	} else if err != nil {
+	id, err := client.Incr(ctx, "user:next-id").Result()
+	if err != nil {
+		return nil, err
+	}
+	key := fmt.Sprintf("user:%d", id)
+	pipe := client.Pipeline() //allows sending a multiple commands to redis wihtout a response for everyone
+	pipe.HSet(ctx, key, "id", id)
+	pipe.HSet(ctx, key, "username", username)
+	pipe.HSet(ctx, key, "hash", hash)
+	pipe.HSet(ctx, "user:by-username", username, id)
+	_, err = pipe.Exec(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return &User{key}, nil
+}
+
+
+//GetID - get user id
+func (user *User) GetID() (int64, error) {
+	ctx := context.TODO()
+	return client.HGet(ctx, user.key, "id").Int64()
+}
+
+//GetUsername - gets username
+func (user *User) GetUsername() (string, error) {
+	ctx := context.TODO()
+	return client.HGet(ctx, user.key, "username").Result()
+}
+
+//GetHash - gets hash for password
+func (user *User) GetHash() ([]byte, error) {
+	ctx := context.TODO()
+	return client.HGet(ctx, user.key, "hash").Bytes()
+}
+
+//Authenticate - Authenticates User
+func (User *User) Authenticate(password string) error {
+	hash, err := User.GetHash()
+	if err != nil {
 		return err
 	}
 	err = bcrypt.CompareHashAndPassword(hash, []byte(password))
-	if err != nil {
+	if err == bcrypt.ErrMismatchedHashAndPassword {
 		return ErrInvalidLogin
 	}
-	return nil
+	return err
+}
+
+
+func GetUserById(id int64) (*User, error) {
+	key := fmt.Sprintf("user:%d", id)
+	return &User{key}, nil
+}
+
+//GetUserByUsername - uses username as key
+func GetUserByUsername(username string) (*User, error) {
+	ctx := context.TODO()
+	id, err := client.HGet(ctx, "user:by-username", username).Int64()
+	if err == redis.Nil {
+		return nil, ErrUserNotFound
+	} else if err != nil {
+		return nil, err
+	}
+	return GetUserById(id)
+}
+
+// RegisterUser - page to register a user
+func RegisterUser(username, password string) ( error) {
+	cost := bcrypt.DefaultCost
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), cost)
+	if err != nil {
+		return  err
+	}
+
+	_, err = NewUser(username, hash)
+	return err
+}
+
+//AuthenticateUser - make sure authentication works
+func AuthenticateUser(username, password string) (*User, error) {
+	user, err := GetUserByUsername(username)
+	if err != nil {
+		return nil, err
+	}
+	return user, user.Authenticate(password)
 }
