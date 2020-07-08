@@ -2,15 +2,15 @@ package routes
 
 import (
 	"net/http"
-	"github.com/gorilla/mux"
+
 	"../middleware"
 	"../models"
 	"../sessions"
 	"../utils"
-
-
+	"github.com/gorilla/mux"
 )
 
+//NewRouter - the router for the website
 func NewRouter() *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", middleware.AuthRequired(indexGetHandler)).Methods("GET")
@@ -19,13 +19,40 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/login", loginPostHandler).Methods("POST")
 	r.HandleFunc("/register", registerGetHandler).Methods("GET")
 	r.HandleFunc("/register", registerPostHandler).Methods("POST")
-	fs := http.FileServer(http.Dir("./static/"))
-	r.PathPrefix("/static/").Handler(http.StripPrefix("/static/", fs))
+	fs := http.FileServer(http.Dir("./styles/"))
+	r.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/", fs))
+
+	r.HandleFunc("/{username}",
+		middleware.AuthRequired(userGetHandler)).Methods("Get")
 	return r
 }
 
+func userGetHandler(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	username := vars["username"]
+	user, err := models.GetUserByUsername(username)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	userID, err := user.GetID()
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	updates, err := models.GetUpdates(userID)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Internal server error"))
+		return
+	}
+	utils.ExecuteTemplate(w, "index.html", updates)
+}
+
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
-	updates, err := models.GetUpdates()
+	updates, err := models.GetAllUpdates()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Internal server error"))
@@ -36,8 +63,8 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := sessions.Store.Get(r, "session")
-	untypedUserId := session.Values["user_id"]
-	userId, ok := untypedUserId.(int64)
+	untypedUserID := session.Values["user_id"]
+	userID, ok := untypedUserID.(int64)
 	if !ok {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Internal server error"))
@@ -45,7 +72,7 @@ func indexPostHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	r.ParseForm()
 	body := r.PostForm.Get("update")
-	err := models.PostUpdate(userId, body)
+	err := models.PostUpdate(userID, body)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Internal server error"))
@@ -75,14 +102,14 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	userId, err := user.GetID()
+	userID, err := user.GetID()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Internal server error"))
 		return
 	}
 	session, _ := sessions.Store.Get(r, "session")
-	session.Values["user_id"] = userId
+	session.Values["user_id"] = userID
 	session.Save(r, w)
 	http.Redirect(w, r, "/", 302)
 }

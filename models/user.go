@@ -21,7 +21,6 @@ type User struct {
 	key string //key into redis db
 }
 
-
 //NewUser - creates a new User
 func NewUser(username string, hash []byte) (*User, error) {
 	ctx := context.TODO()
@@ -42,7 +41,6 @@ func NewUser(username string, hash []byte) (*User, error) {
 	return &User{key}, nil
 }
 
-
 //GetID - get user id
 func (user *User) GetID() (int64, error) {
 	ctx := context.TODO()
@@ -62,8 +60,8 @@ func (user *User) GetHash() ([]byte, error) {
 }
 
 //Authenticate - Authenticates User
-func (User *User) Authenticate(password string) error {
-	hash, err := User.GetHash()
+func (user *User) Authenticate(password string) error {
+	hash, err := user.GetHash()
 	if err != nil {
 		return err
 	}
@@ -74,8 +72,8 @@ func (User *User) Authenticate(password string) error {
 	return err
 }
 
-
-func GetUserById(id int64) (*User, error) {
+// GetUserByID - returs user from id
+func GetUserByID(id int64) (*User, error) {
 	key := fmt.Sprintf("user:%d", id)
 	return &User{key}, nil
 }
@@ -89,15 +87,15 @@ func GetUserByUsername(username string) (*User, error) {
 	} else if err != nil {
 		return nil, err
 	}
-	return GetUserById(id)
+	return GetUserByID(id)
 }
 
 // RegisterUser - page to register a user
-func RegisterUser(username, password string) ( error) {
+func RegisterUser(username, password string) error {
 	cost := bcrypt.DefaultCost
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), cost)
 	if err != nil {
-		return  err
+		return err
 	}
 
 	_, err = NewUser(username, hash)
