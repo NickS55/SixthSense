@@ -1,7 +1,11 @@
 package routes
 
 import (
+	"fmt"
+	"io/ioutil"
 	"net/http"
+	"strings"
+	"text/template"
 
 	"../middleware"
 	"../models"
@@ -19,8 +23,13 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/login", loginPostHandler).Methods("POST")
 	r.HandleFunc("/register", registerGetHandler).Methods("GET")
 	r.HandleFunc("/register", registerPostHandler).Methods("POST")
+	r.HandleFunc("/application", applicationGetHandler).Methods("GET")
+
 	fs := http.FileServer(http.Dir("./styles/"))
 	r.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/", fs))
+
+	fs2 := http.FileServer(http.Dir("./images/"))
+	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", fs2))
 
 	r.HandleFunc("/{username}",
 		middleware.AuthRequired(userGetHandler)).Methods("Get")
@@ -48,7 +57,21 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Internal server error"))
 		return
 	}
-	utils.ExecuteTemplate(w, "index.html", updates)
+
+	var allFiles []string
+	files, err := ioutil.ReadDir("./templates")
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, file := range files {
+		filename := file.Name()
+		if strings.HasSuffix(filename, ".tmpl") {
+			allFiles = append(allFiles, "./templates/"+filename)
+		}
+	}
+
+	utils.ExecuteTemplateTmpl(w, "index.tmpl", "index", updates)
+
 }
 
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +81,26 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Internal server error"))
 		return
 	}
-	utils.ExecuteTemplate(w, "index.html", updates)
+
+	var allFiles []string
+	files, err := ioutil.ReadDir("./templates")
+	if err != nil {
+		fmt.Println(err)
+	}
+	for _, file := range files {
+		filename := file.Name()
+		if strings.HasSuffix(filename, ".tmpl") {
+			allFiles = append(allFiles, "./templates/"+filename)
+		}
+	}
+
+	var templates *template.Template
+
+	templates, err = template.ParseFiles(allFiles...)
+
+	s2 := templates.Lookup("index.tmpl")
+	s2.ExecuteTemplate(w, "index", updates)
+
 }
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
@@ -129,4 +171,8 @@ func registerPostHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	http.Redirect(w, r, "/login", 302)
+}
+
+func applicationGetHandler(w http.ResponseWriter, r *http.Request) {
+	utils.ExecuteTemplate(w, "application.html", nil)
 }
