@@ -1,6 +1,6 @@
 # SixthSense
 
-### in-progress 
+### Paused
 
 ## the purpose of this project
 
