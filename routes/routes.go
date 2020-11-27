@@ -25,11 +25,15 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/register", registerPostHandler).Methods("POST")
 	r.HandleFunc("/application", applicationGetHandler).Methods("GET")
 
-	fs := http.FileServer(http.Dir("./styles/"))
-	r.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/", fs))
+	fsstyle := http.FileServer(http.Dir("./styles/"))
+	r.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/", fsstyle))
 
-	fs2 := http.FileServer(http.Dir("./images/"))
-	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", fs2))
+	fsimages := http.FileServer(http.Dir("./images/"))
+	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", fsimages))
+
+	//change with webpack
+	fsjs := http.FileServer(http.Dir("./dist/"))
+	r.PathPrefix("/dist/").Handler(http.StripPrefix("/dist/", fsjs))
 
 	r.HandleFunc("/{username}",
 		middleware.AuthRequired(userGetHandler)).Methods("Get")

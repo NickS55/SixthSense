@@ -1,0 +1,29 @@
+{
+  "name": "6thSense",
+  "version": "1.0.0",
+  "description": "### in-progress",
+  "main": "index.js",
+  "private": "true",
+  "dependencies": {
+    "three": "^0.122.0",
+    "webpack": "^5.3.2"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.1.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack  && go run main.go" 
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickS55/SixthSense.git"
+  },
+  "keywords": [],
+  "author": "Nicholas Sadd nicholassadd@gmail.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NickS55/SixthSense/issues"
+  },
+  "homepage": "https://github.com/NickS55/SixthSense#readme"
+}
