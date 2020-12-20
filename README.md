@@ -6,14 +6,11 @@
 
 1) to create a tool for pitchers who want to advance their craft 
 
-2) To experience setting up a website from end to end
-
-
 ## Features that I want to get done
-    -create a baseball simulator using three js and 3d images 
+    -create a baseball simulator using three js and GLTF 
     -using a k-means algorithm to categorize pitches
     -study pitch sequences and use gametheory and psychology to create specific sequences
-    -a pitch grader that uses 
+    -a pitch grader that estimates the effectiveness of pitches based on mlb pitcher data
 
 
 ## How to Run Locally
