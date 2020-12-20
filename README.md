@@ -16,12 +16,20 @@
     -a pitch grader that uses 
 
 
+## How to Run Locally
+1) install yarn 
+    - the machine this was made on is macOS
+    - installed using homebrew ($ brew install yarn)
 
-## Technology for this website
-    Frontend 
-    - Vanilla JS ???
-    - Three.js
-    - Stimulus
+2) add depencies to the project 
+    - $ yarn install
 
-    Backend
-    - Golang
+3) run 
+    - yarn run build
+
+4) local host
+    - http://localhost:3000/
+    - http://localhost:3000/application
+    - to change port from 3000 change the number in main.go 
+
+
