@@ -20,7 +20,7 @@
     - $ yarn install
 
 3) run 
-    - yarn run build
+    - $ yarn run build
 
 4) local host
     - http://localhost:3000/
