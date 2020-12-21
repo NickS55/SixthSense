@@ -1,7 +1,5 @@
 # SixthSense
 
-### Paused
-
 ## the purpose of this project
 
 1) to create a tool for pitchers who want to advance their craft 
@@ -15,7 +13,7 @@
 
 ## How to Run Locally
 1) install yarn 
-    - the machine this was made on is macOS
+    - made on Mac OS
     - installed using homebrew ($ brew install yarn)
 
 2) add depencies to the project 
