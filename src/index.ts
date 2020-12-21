@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls}  from 'three/examples/jsm/controls/OrbitControls.js'
+import {create_line} from './create_line'
 
 var 
 camera: THREE.Camera,
@@ -28,7 +29,11 @@ const plane_material = new THREE.MeshBasicMaterial( {color: 0x567d46, side: THRE
 const plane = new THREE.Mesh( plane_geometry, plane_material );
 scene.add( plane );
 
-create_line(3.42085, 2062, 0.893, 53.72, 7.396, 0.005, -125.074, -7.671, -1.481, 3.672)
+var line: THREE.Line;
+
+line = create_line(3.42085, 2062, 0.893, 53.72, 7.396, 0.005, -125.074, -7.671, -1.481, 3.672);
+
+scene.add(line)
 
 
 var baseball_obj: THREE.Group;
@@ -91,54 +96,54 @@ function animate() {
   renderer.render( scene, camera );
 }
 
-function create_line(spinAngle: number, rpm: number, x: number , y: number , z: number , velX: number , velY: number, velZ: number, plate_x: number , plate_z: number){
-  //change to thick lines
-  const material = new THREE.LineBasicMaterial( { 
-    color: 0xCAFD7C,
-    linewidth: 5,
-    linecap: 'round',
-   } );
+// function create_line(spinAngle: number, rpm: number, x: number , y: number , z: number , velX: number , velY: number, velZ: number, plate_x: number , plate_z: number){
+//   //change to thick lines
+//   const material = new THREE.LineBasicMaterial( { 
+//     color: 0xCAFD7C,
+//     linewidth: 5,
+//     linecap: 'round',
+//    } );
 
-   var oldy, mass, B, gravity, accY, accX, accZ;
+//    var oldy, mass, B, gravity, accY, accX, accZ;
 
-   velX *= .01
-   velY *= .01
-   velZ *= .01
+//    velX *= .01
+//    velY *= .01
+//    velZ *= .01
 
-  oldy = y;
-  mass = 5/16;
-  B = 4.1 * Math.pow(10, -4);
-  gravity = 9.8;
+//   oldy = y;
+//   mass = 5/16;
+//   B = 4.1 * Math.pow(10, -4);
+//   gravity = 9.8;
 
-  //expirement with how many points makes a good tail drag
-  const points = [];
-  while(Math.abs(oldy - y ) <= 50){
-    points.push( new THREE.Vector3(x, y, z) );
+//   //expirement with how many points makes a good tail drag
+//   const points = [];
+//   while(Math.abs(oldy - y ) <= 50){
+//     points.push( new THREE.Vector3(x, y, z) );
 
 
-    // acceleration = .5 * density of air * Velocity^2 * cross sectional area * drag coefficient
+//     // acceleration = .5 * density of air * Velocity^2 * cross sectional area * drag coefficient
 
-    //using .3 as Drag Coefficient, see https://www.grc.nasa.gov/www/k-12/airplane/balldrag.html
-    //real range between .2 and .5 because of drag crisis
-    accY = (.5 * .0765 * .3 * Math.PI * Math.pow((1.437/12) , 2) * Math.pow(velY, 2)) / mass ;
-    accX = B * (rpm / 60) / 100 * velY * Math.cos(spinAngle);
-    accZ = -B * rpm / 60 / 100 * velY * Math.sin(spinAngle) - gravity;
+//     //using .3 as Drag Coefficient, see https://www.grc.nasa.gov/www/k-12/airplane/balldrag.html
+//     //real range between .2 and .5 because of drag crisis
+//     accY = (.5 * .0765 * .3 * Math.PI * Math.pow((1.437/12) , 2) * Math.pow(velY, 2)) / mass ;
+//     accX = B * (rpm / 60) / 100 * velY * Math.cos(spinAngle);
+//     accZ = -B * rpm / 60 / 100 * velY * Math.sin(spinAngle) - gravity;
 
-    console.log(x);
-    console.log("acc" + accX);
-    console.log("velo:" +  velX);
+//     console.log(x);
+//     console.log("acc" + accX);
+//     console.log("velo:" +  velX);
 
-    x += velX;
-    y += velY;
-    z += velZ;
+//     x += velX;
+//     y += velY;
+//     z += velZ;
 
-    velX = velX + accX;
-    velY = velY + accY;
-    velZ = velZ;// + accZ;
+//     velX = velX + accX;
+//     velY = velY + accY;
+//     velZ = velZ;// + accZ;
 
-  }
-  console.log(points.length)
-  const geometry = new THREE.BufferGeometry().setFromPoints( points );
-  const line = new THREE.Line( geometry, material );
-  scene.add( line );
-}
+//   }
+//   console.log(points.length)
+//   const geometry = new THREE.BufferGeometry().setFromPoints( points );
+//   const line = new THREE.Line( geometry, material );
+//   scene.add( line );
+// }
