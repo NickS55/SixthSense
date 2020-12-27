@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { multiplier, scene } from './index';
 
 function create_line(spinAngle: number, rpm: number, x: number , y: number , z: number , velX: number , velY: number, velZ: number, plate_x: number , plate_z: number){
     //change to thick lines
@@ -21,8 +22,8 @@ function create_line(spinAngle: number, rpm: number, x: number , y: number , z: 
   
     //expirement with how many points makes a good tail drag
     const points = [];
-    while(Math.abs(oldy - y ) <= 50){
-      points.push( new THREE.Vector3(x, y, z) );
+    while(Math.abs(oldy - y ) <= 53){
+      points.push( new THREE.Vector3(x * multiplier, y * multiplier, z * multiplier) );
   
   
       // acceleration = .5 * density of air * Velocity^2 * cross sectional area * drag coefficient
@@ -33,23 +34,23 @@ function create_line(spinAngle: number, rpm: number, x: number , y: number , z: 
       accX = B * (rpm / 60) / 100 * velY * Math.cos(spinAngle);
       accZ = -B * rpm / 60 / 100 * velY * Math.sin(spinAngle) - gravity;
   
-      console.log(x);
+      console.log(x * multiplier, y* multiplier, z* multiplier);
       console.log("acc" + accX);
       console.log("velo:" +  velX);
   
-      x += velX;
-      y += velY;
-      z += velZ;
+      x += velX ;
+      y += velY ;
+      z += velZ ;
   
       velX = velX + accX;
       velY = velY + accY;
-      velZ = velZ;// + accZ;
+      velZ = velZ; //;
   
     }
   console.log(points.length)
   const geometry = new THREE.BufferGeometry().setFromPoints( points );
   const line = new THREE.Line( geometry, material );
-  return line;
+  scene.add(line);
 }
 
 export {create_line};
