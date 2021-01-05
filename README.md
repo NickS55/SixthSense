@@ -30,4 +30,5 @@
     - http://localhost:3000/application
     - to change port from 3000 change the number in main.go 
 
-
+References:
+    - [Determining the 3D Spin Axis from Statcast Data - Alan M. Nathan Ph.D.] (http://baseball.physics.illinois.edu/trackman/spinaxis.pdf)
