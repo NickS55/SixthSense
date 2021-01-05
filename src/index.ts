@@ -5,6 +5,7 @@ import { create_grass } from './create_grass';
 import { create_plate } from './create_plate';
 import { add_baseballs, baseballs_GLTF } from './baseball_loader';
 import { Baseball } from './Baseball';
+import {create_strikezone} from './create_strikezone';
 
 export var 
 camera: THREE.Camera,
@@ -28,11 +29,12 @@ multiplier = 10;
 
 create_grass(); //set plate at 0,0
 create_plate();
+create_strikezone();
 
 export var baseballs : Baseball[] = [];
-const fastball = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -1.481, 3.672);
-const changeup = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -1.481, 3.672);
-const slider = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -1.481, 3.672);
+const fastball = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752 );
+const changeup = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
+const slider = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
 
 baseballs.push(fastball);
 baseballs.push(changeup);

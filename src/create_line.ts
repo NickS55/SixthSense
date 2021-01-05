@@ -1,46 +1,44 @@
 import * as THREE from 'three';
 import { multiplier, scene } from './index';
-import { LineGeometry } from 'three/examples/jsm/lines/LineGeometry.js';
-import { LineMaterial } from 'three/examples/jsm/lines/LineMaterial.js';
-import { Line2 } from 'three/examples/jsm/lines/Line2.js';
 import { LineBasicMaterial } from 'three';
 
 /*
 * A simultion of a pitch based on the data given from trakman 
+*
+* Units:
+* time: seconds
+* angles: radians
+* speed: feet per second
+* mass: lbs
+*
+* direction: 
+* - homeplate to second base : y-axis
+* - ground to sky: z-axis
+* - 3rd base to 1st base: x-axis
+*
 * Assumtions: 
 * - The magnus force is constant (this is not true, but is an assumtion that I am assuming as of right now.)
 * - the ball is thrown at Tropicana Field
 * - assuming drag coeffient is constant (.3)
+* - assuming the spin of the baseball does not effect drag ( it does )
 *
-*
+* to do:
+* - right now, magnus acceleration is not updating. needs to be fixed.
+* - add thick lines as an option?
 */
-// function create_line(spinAngle: number, rpm: number, x: number , y: number , z: number , velX: number , velY: number, velZ: number, plate_x: number , plate_z: number) {
-  function create_line() {
 
-    const matLine = new LineMaterial( {
-      color: 0xffffff,
-      linewidth: 5, // in pixels
-      vertexColors: true,
-      //resolution:  // to be set by renderer, eventually
-      dashed: false
+  function create_line(x: number , y: number , z: number ,
+     velX: number , velY: number, velZ: number,
+      accX : number, accY : number, accZ : number) {
 
-    } );
-
-
-    //change to thick lines
+    //change to thick lines in future?
     const material = new LineBasicMaterial ( { 
       color: 0xCAFD7C,
-      linewidth: 5, //this does not work
+      linewidth: 1, //this does not work
       linecap: 'round',
      } );
 
      const points = [];
-
-     
-     //var positions = new Float32Array( 400 * 3 );
-     
-
-     //calculate total magnus force of a specific pitch
      
      var accDragY: number, accDragX: number, accDragZ: number;
      var KConst: number
@@ -49,24 +47,9 @@ import { LineBasicMaterial } from 'three';
      var totalV: number;
      var gravity: number;
 
-     //
-        var x = -1;
-        var y = 55;
-        var z = 6;
-
-        var accX = 11.181;
-        var accY = 33.569;
-        var accZ = -12.172;
-
-        var velX = 2.43;
-        var velY = -139.26;
-        var velZ = -4.86;
-     //
 
      var deltaTime: number;
-     deltaTime = 10
-
-
+     deltaTime = 100;
 
       radius = 1.43/12; //feet
       dragCoefficient = .3; 
@@ -76,7 +59,7 @@ import { LineBasicMaterial } from 'three';
       mass = 5/16; //5oz or 5/16 of a pound
       airDensity = .0740; // pounds per feet^3 this is of at Tropicana Field at 70 F 50% Humidity (later add ability to change weather, evevation, etc..., but for now keep at this)
       KConst = .5 * airDensity * Math.PI * Math.pow(radius, 2) / mass;
-      gravity = -32.174;
+      gravity = -32.174; // feet per second
 
       totalV = Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2) + Math.pow(velZ, 2));
 
@@ -92,13 +75,9 @@ import { LineBasicMaterial } from 'three';
       var accMagnusYhelper = accMagnusY / Math.pow(totalV, 2);
       var accMagnusZhelper = accMagnusZ / Math.pow(totalV, 2);
 
-      //var index = 0;
      while(y > 0) {
         
         points.push( new THREE.Vector3(x * multiplier, y * multiplier, z * multiplier) );
-        // positions[index++] = x * multiplier;
-        // positions[index++] = y * multiplier;
-        // positions[index++] = z * multiplier;
 
         totalV = Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2) + Math.pow(velZ, 2));
         
@@ -129,22 +108,18 @@ import { LineBasicMaterial } from 'three';
         accMagnusYhelper = accMagnusY / Math.pow(totalV, 2);
         accMagnusZhelper = accMagnusZ / Math.pow(totalV, 2);
 
-        console.log( "coordinates: " + x + ',' + y + ',' + z);
-        console.log( "velocities: " + velX + ',' + velY + ',' + velZ);
-        console.log( "accelerations: " + accX + ',' + accY + ',' + accZ);
-        console.log( "accelMag: " + accMagnusX + ',' + accMagnusY + ',' + accMagnusZ);
-        console.log(totalV);
+        // console.log( "coordinates: " + x + ',' + y + ',' + z);
+        // console.log( "velocities: " + velX + ',' + velY + ',' + velZ);
+        // console.log( "accelerations: " + accX + ',' + accY + ',' + accZ);
+        // console.log( "accelMag: " + accMagnusX + ',' + accMagnusY + ',' + accMagnusZ);
+        // console.log(totalV);
     }
 
-    //const geometry = new LineGeometry();
-    //geometry.setPositions(positions);
-    //geometry.setFromPoints( points );
     const geometry = new THREE.BufferGeometry().setFromPoints( points );
-    //const geometry = new THREE.LineGeometry();
-    //const line = new Line2( geometry, matLine );
     const line = new THREE.Line( geometry, material );
     scene.add(line);
     }
+    export {create_line};
 
 
 
@@ -339,5 +314,3 @@ import { LineBasicMaterial } from 'three';
 //   const line = new THREE.Line( geometry, material );
 //   scene.add(line);
 // }
-
-export {create_line};
