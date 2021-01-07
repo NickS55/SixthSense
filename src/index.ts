@@ -27,12 +27,12 @@ const controls = new OrbitControls(camera, renderer.domElement );
 export var multiplier: number;
 multiplier = 10;
 
-create_grass(); //set plate at 0,0
-create_plate();
+create_grass(); 
+create_plate(); //set plate at 0,0
 create_strikezone();
 
 export var baseballs : Baseball[] = [];
-const fastball = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752 );
+const fastball = new Baseball(3.42085, 2062, -0.893,  50.00, 6.917, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752 );
 const changeup = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
 const slider = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
 

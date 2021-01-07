@@ -42,7 +42,7 @@ import { LineBasicMaterial } from 'three';
      
      var accDragY: number, accDragX: number, accDragZ: number;
      var KConst: number
-     var airDensity: number, radius: number, circumference: number;
+     var airDensity: number, radius: number;
      var dragCoefficient:number, mass:number;
      var totalV: number;
      var gravity: number;
@@ -108,13 +108,15 @@ import { LineBasicMaterial } from 'three';
         accMagnusYhelper = accMagnusY / Math.pow(totalV, 2);
         accMagnusZhelper = accMagnusZ / Math.pow(totalV, 2);
 
-        // console.log( "coordinates: " + x + ',' + y + ',' + z);
+         console.log( "coordinates: " + x + ',' + y + ',' + z);
         // console.log( "velocities: " + velX + ',' + velY + ',' + velZ);
         // console.log( "accelerations: " + accX + ',' + accY + ',' + accZ);
         // console.log( "accelMag: " + accMagnusX + ',' + accMagnusY + ',' + accMagnusZ);
         // console.log(totalV);
     }
 
+    points.push( new THREE.Vector3(x * multiplier, y * multiplier, z * multiplier) );
+    
     const geometry = new THREE.BufferGeometry().setFromPoints( points );
     const line = new THREE.Line( geometry, material );
     scene.add(line);

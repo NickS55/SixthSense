@@ -24,6 +24,7 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/register", registerGetHandler).Methods("GET")
 	r.HandleFunc("/register", registerPostHandler).Methods("POST")
 	r.HandleFunc("/application", applicationGetHandler).Methods("GET")
+	r.HandleFunc("/profile", applicationGetHandler).Methods("GET")
 
 	fsstyle := http.FileServer(http.Dir("./styles/"))
 	r.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/", fsstyle))
