@@ -4,8 +4,6 @@
 
 1) to create a tool for pitchers who want to advance their craft 
 
-:anguished:
-
 ## Features
 Completed :bowtie:
 
