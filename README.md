@@ -1,8 +1,4 @@
-# SixthSense
-
-## the purpose of this project
-
-1) to create a tool for pitchers who want to advance their craft 
+# SixthSense: <font size = 4 color = grey > a tool to aid in pitch design and sequencing for baseball pitchers </font>
 
 ## Features
 ### Completed :bowtie:
