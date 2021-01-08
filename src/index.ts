@@ -1,11 +1,12 @@
 import * as THREE from 'three';
-import { OrbitControls}  from 'three/examples/jsm/controls/OrbitControls.js'
+//import { OrbitControls}  from 'three/examples/jsm/controls/OrbitControls.js'
 
 import { create_grass } from './create_grass';
 import { create_plate } from './create_plate';
 import { add_baseballs, baseballs_GLTF } from './baseball_loader';
 import { Baseball } from './Baseball';
 import {create_strikezone} from './create_strikezone';
+import { Vector3 } from 'three';
 
 export var 
 camera: THREE.Camera,
@@ -22,7 +23,7 @@ document.body.appendChild( renderer.domElement );
 scene.background = new THREE.Color(0x87ceeb);
 camera.position.set( 0, 150, 400 );
 
-const controls = new OrbitControls(camera, renderer.domElement );
+//const controls = new OrbitControls(camera, renderer.domElement );
 
 export var multiplier: number;
 multiplier = 10;
@@ -48,6 +49,34 @@ add_baseballs().catch(error => console.error(error));
 var light = new THREE.AmbientLight(0xFFFFFF, .95);
 scene.add(light);
 
+document.getElementById("RHB_View")!.addEventListener("click", RHB_View)
+document.getElementById("LHB_View")!.addEventListener("click", LHB_View)
+document.getElementById("Pitcher_View")!.addEventListener("click", Pitcher_View)
+document.getElementById("Catcher_View")!.addEventListener("click", Catcher_View)
+
+function RHB_View() {
+    camera.position.set( -2 * multiplier, -.3 * multiplier, 6 * multiplier);
+    camera.lookAt(new Vector3(0, 60.5 * multiplier, 6 * multiplier));
+    camera.rotateZ(-Math.PI/2);
+  }
+
+function LHB_View() {
+    camera.position.set( 2 * multiplier, -.3 * multiplier, 6 * multiplier);
+    camera.lookAt(new Vector3(0, 60.5 * multiplier, 6 * multiplier));
+    camera.rotateZ(Math.PI/2);
+}
+
+function Pitcher_View() {
+    camera.position.set( 0, 60.5 * multiplier, 6 * multiplier);
+    camera.lookAt(new Vector3(0, 0, 3 * multiplier));
+    camera.rotateZ(Math.PI);
+}
+
+function Catcher_View() {
+    camera.position.set( 0, -2 * multiplier, 3 * multiplier);
+    camera.lookAt(new Vector3(0, 60.5 * multiplier, 6 * multiplier));
+    camera.rotateZ(Math.PI);
+}
 
 
 const animate = function () {
@@ -57,7 +86,7 @@ const animate = function () {
         baseballs_GLTF[parseInt(baseball)].rotateOnAxis(baseballs[parseInt(baseball)].vector3Axis, .1);
     }
 
-    controls.update();
+    //controls.update();
     renderer.render( scene, camera );
 
 };
