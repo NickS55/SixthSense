@@ -37,6 +37,6 @@ In-Progress:
 
 References:
 
-    - [Determining the 3D Spin Axis from Statcast Data - Alan M. Nathan Ph.D.](http://baseball.physics.illinois.edu/trackman/spinaxis.pdf)
-    
-    - The Pysics of Baseball - Robert K Adair Ph.D.
+[Determining the 3D Spin Axis from Statcast Data - Alan M. Nathan Ph.D.](http://baseball.physics.illinois.edu/trackman/spinaxis.pdf)
+
+The Pysics of Baseball - Robert K Adair Ph.D.
