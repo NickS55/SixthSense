@@ -7,13 +7,13 @@
 ## Features
 Completed :bowtie:
 
-    - create a baseball simulator using three js and Trakman/rapsodo/flightscope
+    - create a baseball simulator using three js and Trakman/Rapsodo/Flightscope data
 
 In-Progress:
 
-    -using a k-means algorithm to categorize pitches
-    -study pitch sequences and use gametheory and psychology to create specific sequences
-    -a pitch grader that estimates the effectiveness of pitches based on mlb pitcher data
+    - use a k-means algorithm to categorize pitches
+    - help users understand how to sequence pitches
+    - heatmaps that allow users to know where the the most effective place to throw their pitch is
 
 
 ## How to Run Locally
