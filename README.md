@@ -5,15 +5,15 @@
 1) to create a tool for pitchers who want to advance their craft 
 
 ## Features
-Completed :bowtie:
+### Completed :bowtie:
 
-    - create a baseball simulator using three js and Trakman/Rapsodo/Flightscope data
+ - create a baseball simulator using three js and Trakman/Rapsodo/Flightscope data
 
-In-Progress:
+#### In-Progress:
 
-    - use a k-means algorithm to categorize pitches
-    - help users understand how to sequence pitches
-    - heatmaps that allow users to know where the the most effective place to throw their pitch is
+- use a k-means algorithm to categorize pitches
+- help users understand how to sequence pitches
+- heatmaps that allow users to know where the the most effective place to throw their pitch is
 
 
 ## How to Run Locally
