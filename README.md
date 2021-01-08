@@ -3,10 +3,16 @@
 ## the purpose of this project
 
 1) to create a tool for pitchers who want to advance their craft 
+
 :anguished:
 
-## Features that I want to get done
-    - :anguished: create a baseball simulator using three js and Trakman/rapsodo/flightscope
+## Features
+Completed :bowtie:
+
+    - create a baseball simulator using three js and Trakman/rapsodo/flightscope
+
+In-Progress:
+
     -using a k-means algorithm to categorize pitches
     -study pitch sequences and use gametheory and psychology to create specific sequences
     -a pitch grader that estimates the effectiveness of pitches based on mlb pitcher data
