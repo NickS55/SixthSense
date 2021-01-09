@@ -46,7 +46,7 @@ fastball.create_tracer();
 add_baseballs().catch(error => console.error(error));
 
 
-var light = new THREE.AmbientLight(0xFFFFFF, .95);
+const light = new THREE.AmbientLight(0xFFFFFF, .95);
 scene.add(light);
 
 document.getElementById("RHB_View")!.addEventListener("click", RHB_View)
@@ -82,7 +82,7 @@ function Catcher_View() {
 const animate = function () {
     requestAnimationFrame( animate );
 
-    for( var baseball in baseballs_GLTF){
+    for( const baseball in baseballs_GLTF){
         baseballs_GLTF[parseInt(baseball)].rotateOnAxis(baseballs[parseInt(baseball)].vector3Axis, .1);
     }
 

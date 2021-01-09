@@ -40,15 +40,15 @@ import { LineBasicMaterial } from 'three';
 
      const points = [];
      
-     var accDragY: number, accDragX: number, accDragZ: number;
-     var KConst: number
-     var airDensity: number, radius: number;
-     var dragCoefficient:number, mass:number;
-     var totalV: number;
-     var gravity: number;
+     let accDragY: number, accDragX: number, accDragZ: number;
+     let KConst: number
+     let airDensity: number, radius: number;
+     let dragCoefficient:number, mass:number;
+     let totalV: number;
+     let gravity: number;
 
 
-     var deltaTime: number;
+     let deltaTime: number;
      deltaTime = 100;
 
       radius = 1.43/12; //feet
@@ -67,13 +67,13 @@ import { LineBasicMaterial } from 'three';
       accDragX = -1 * KConst * dragCoefficient * totalV * (velX);
       accDragZ = -1 * KConst * dragCoefficient * totalV * (velZ);
 
-      var accMagnusX = accX - accDragX ;
-      var accMagnusY = accY - accDragY ;
-      var accMagnusZ = accZ - accDragZ - gravity;
+      let accMagnusX = accX - accDragX ;
+      let accMagnusY = accY - accDragY ;
+      let accMagnusZ = accZ - accDragZ - gravity;
 
-      var accMagnusXhelper = accMagnusX / Math.pow(totalV, 2);
-      var accMagnusYhelper = accMagnusY / Math.pow(totalV, 2);
-      var accMagnusZhelper = accMagnusZ / Math.pow(totalV, 2);
+      let accMagnusXhelper = accMagnusX / Math.pow(totalV, 2);
+      let accMagnusYhelper = accMagnusY / Math.pow(totalV, 2);
+      let accMagnusZhelper = accMagnusZ / Math.pow(totalV, 2);
 
      while(y > 0) {
         

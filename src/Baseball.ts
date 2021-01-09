@@ -33,7 +33,7 @@ export class Baseball {
         this.accZ = accZ;
         
 
-        var axis = new THREE.Vector3(Math.cos(this.axisRad), 0, Math.sin(this.axisRad));
+        const axis = new THREE.Vector3(Math.cos(this.axisRad), 0, Math.sin(this.axisRad));
         this.vector3Axis = axis.normalize();
     }
 
@@ -42,7 +42,7 @@ export class Baseball {
     }
 
     set_axis() {
-        var axis = new THREE.Vector3(Math.cos(this.axisRad), Math.sin(this.axisRad), 0);
+        const axis = new THREE.Vector3(Math.cos(this.axisRad), Math.sin(this.axisRad), 0);
         this.vector3Axis = axis.normalize();
     }
 }

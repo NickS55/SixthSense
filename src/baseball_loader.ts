@@ -10,9 +10,9 @@ function loadModel(url: string) {
     });
 }
 export async function add_baseballs() {
-    var ball_GLTF: any, ball_mesh: any;
+    let ball_GLTF: any, ball_mesh: any;
 
-    for (var baseball in baseballs) {
+    for (const baseball in baseballs) {
         ball_GLTF = await loadModel('styles/baseball/Baseball.glb');
         ball_mesh = ball_GLTF.scene;
         scene.add(ball_mesh);

@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { multiplier, scene } from './index';
 
 export function create_grass() {
-    var plate_mound_distance = 60.5 * multiplier;
+    const plate_mound_distance = 60.5 * multiplier;
 
     const grass_geometry = new THREE.PlaneGeometry(100, plate_mound_distance * 1.2);
     const grass_material = new THREE.MeshBasicMaterial({ color: 0x567d46, side: THREE.DoubleSide });
