@@ -32,18 +32,19 @@ create_grass();
 create_plate(); //set plate at 0,0
 create_strikezone();
 
-export var baseballs : Baseball[] = [];
-const fastball = new Baseball(3.42085, 2062, -0.893,  50.00, 6.917, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752 );
-const changeup = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
-const slider = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
+//export var baseballs : Baseball[] = [];
 
-baseballs.push(fastball);
-baseballs.push(changeup);
-baseballs.push(slider);
+const fastball = new Baseball(3.42085, 2062, -0.893,  50.00, 6.917, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752 );
+//const changeup = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
+//const slider = new Baseball(3.42085, 2062, 0.893,  53.72, 7.397, 0.005, -125.074, -7.671, -7.709, 26.704, -2.752);
+
+//baseballs.push(fastball);
+//baseballs.push(changeup);
+//baseballs.push(slider);
 
 fastball.create_tracer();
 
-add_baseballs().catch(error => console.error(error));
+add_baseballs(fastball.x, fastball.y, fastball.z).catch(error => console.error(error));
 
 
 var light = new THREE.AmbientLight(0xFFFFFF, .95);
@@ -82,11 +83,12 @@ function Catcher_View() {
 const animate = function () {
     requestAnimationFrame( animate );
 
-    for( var baseball in baseballs_GLTF){
-        baseballs_GLTF[parseInt(baseball)].rotateOnAxis(baseballs[parseInt(baseball)].vector3Axis, .1);
-    }
+    // for( var baseball in baseballs_GLTF){
+    //     baseballs_GLTF[parseInt(baseball)].rotateOnAxis(baseballs[parseInt(baseball)].vector3Axis, .1);
+    // }
 
-    //controls.update();
+    baseballs_GLTF.rotateOnAxis(fastball.vector3Axis, .1);
+
     renderer.render( scene, camera );
 
 };

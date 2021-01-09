@@ -45,21 +45,3 @@ func main() {
 // 	}
 // 	w.Write([]byte(username))
 // }
-
-// func readCurDir(path string) [50]string {
-// 	file, err := os.Open("./" + path)
-// 	if err != nil {
-// 		log.Fatalf("failed opening directory: %s", err)
-// 	}
-// 	defer file.Close()
-
-// 	list, _ := file.Readdirnames(0) // 0 to read all files and folders
-
-// 	fileNum := 0
-// 	files := [50]string{}
-// 	for _, name := range list {
-// 		files[fileNum] = name
-// 		fileNum++
-// 	}
-// 	return files
-// }
