@@ -60,7 +60,7 @@ func (user *User) GetHash() ([]byte, error) {
 	return client.HGet(ctx, user.key, "hash").Bytes()
 }
 
-//Authenticate - Authenticates User
+//Authenticate - compare's users password to hash
 func (user *User) Authenticate(password string) error {
 	hash, err := user.GetHash()
 	if err != nil {

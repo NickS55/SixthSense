@@ -4,17 +4,27 @@ package main
 
 import (
 	"html/template"
+	"log"
 	"net/http"
 	"os"
 
 	"./models"
 	"./routes"
+	"./sessions"
 	"./utils"
 )
 
 var templates *template.Template
 
 func main() {
+
+	//check if session key exists, if not create a session cookie
+	if os.Getenv("SESSION_KEY") == "" {
+		log.Print("Session Key Not Found, creating Key (SESSION_KEY) Value (byte[32]) Pair")
+		sessions.GenerateSessionCookie()
+
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "3000"
