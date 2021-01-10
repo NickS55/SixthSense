@@ -1,6 +1,8 @@
 package sessions
 
 import (
+	"io/ioutil"
+	"log"
 	"os"
 
 	"github.com/gorilla/securecookie"
@@ -21,5 +23,18 @@ var Store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY"))) //learn ab
 //note: session cookies last a month by default
 func GenerateSessionCookie() {
 	var randKey = string(securecookie.GenerateRandomKey(32))
-	os.Setenv("SESSION_KEY", randKey)
+
+	content, err := ioutil.ReadFile("~/.bash_profile")
+	if err != nil {
+		log.Print(err)
+		log.Fatal("\n if the program cannor find file and you are using go run main.go: \n convert to binary and run in the same file as ./bash_profile")
+	}
+	contentStr := string(content[:]) + "\n\n//Random Key for Cookie creaeted by Sixth Sense\nexport SESSION_KEY=\"" + randKey + "\""
+
+	newContentStr := ([]byte(contentStr))
+
+	err2 := ioutil.WriteFile("~/.bashrc", newContentStr, 0644)
+	if err2 != nil {
+		log.Fatal(err)
+	}
 }

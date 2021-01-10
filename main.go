@@ -3,7 +3,6 @@ package main
 //Thank you to Davy Wybiral on youtube
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -23,7 +22,7 @@ func main() {
 	if os.Getenv("SESSION_KEY") == "" {
 		log.Print("Session Key Not Found, creating Key (SESSION_KEY) Value (byte[32]) Pair")
 		sessions.GenerateSessionCookie()
-		fmt.Print(os.Getenv("SESSION_KEY"))
+
 	}
 
 	port := os.Getenv("PORT")
