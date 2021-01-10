@@ -18,18 +18,19 @@ var (
 
 //User - a user
 type User struct {
-	key string //key into redis db
+	key string //key for redis db
 }
 
 //NewUser - creates a new User
 func NewUser(username string, hash []byte) (*User, error) {
 	ctx := context.TODO()
+	//id is one plus the last number
 	id, err := client.Incr(ctx, "user:next-id").Result()
 	if err != nil {
 		return nil, err
 	}
 	key := fmt.Sprintf("user:%d", id)
-	pipe := client.Pipeline() //allows sending a multiple commands to redis wihtout a response for everyone
+	pipe := client.Pipeline() //allows sending multiple commands to redis wihtout a response for everyone
 	pipe.HSet(ctx, key, "id", id)
 	pipe.HSet(ctx, key, "username", username)
 	pipe.HSet(ctx, key, "hash", hash)
