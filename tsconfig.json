@@ -67,6 +67,6 @@
     "skipLibCheck": true,                     /* Skip type checking of declaration files. */
     "forceConsistentCasingInFileNames": true  /* Disallow inconsistently-cased references to the same file. */
   },
-  "include": ["web/*"],
+  "include": ["web/*", "web/js/create_line.ts", "web/js/create_plate.ts", "web/js/create_strikezone.ts", "web/js/heatmap.ts", "web/js/Baseball.ts", "web/js/create_grass.ts", "web/js/index.ts", "web/js/baseball_loader.ts", "web/js/baseball_loader_multi.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

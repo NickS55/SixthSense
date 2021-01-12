@@ -16,14 +16,14 @@ var templates *template.Template
 func GetFiles() *template.Template {
 	var templates *template.Template
 	var allFiles []string
-	var files, err = ioutil.ReadDir("./templates")
+	var files, err = ioutil.ReadDir("./web/templates")
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, file := range files {
 		filename := file.Name()
 		if strings.HasSuffix(filename, ".tmpl") {
-			allFiles = append(allFiles, "./templates/"+filename)
+			allFiles = append(allFiles, "./web/templates/"+filename)
 		}
 	}
 	templates, err = template.ParseFiles(allFiles...)
@@ -45,7 +45,7 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 
 //LoadTemplates - Loads Template for use
 func LoadTemplates(pattern string) {
-	templates = template.Must(template.ParseGlob("templates/*.html"))
+	templates = template.Must(template.ParseGlob("web/templates/*.html"))
 }
 
 //ExecuteTemplate - runs html from tmpl

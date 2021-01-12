@@ -2,8 +2,8 @@ const path = require('path');
 
 module.exports = {
   entry: { 
-    index : './web/index.ts',
-    heatmaps : './web/heatmap.ts'
+    index : './web/js/index.ts',
+    heatmaps : './web/js/heatmap.ts'
 
     
   },

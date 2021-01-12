@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack && sass styles:styles && go run main.go",
+    "build": "webpack --watch && sass web/styles:web/styles && go run main.go",
     "tsc:w": "tsc -w"
   },
   "repository": {

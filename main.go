@@ -10,7 +10,6 @@ import (
 
 	"./models"
 	"./routes"
-	"./sessions"
 	"./utils"
 )
 
@@ -20,9 +19,8 @@ func main() {
 
 	//check if session key exists, if not create a session cookie
 	if os.Getenv("SESSION_KEY") == "" {
-		log.Print("Session Key Not Found, creating Key (SESSION_KEY) Value (byte[32]) Pair")
-		sessions.GenerateSessionCookie()
-
+		log.Print("Session Key Not Found, creating Key (SESSION_KEY) Value (byte[64]) Pair")
+		log.Fatal("Run script 'cookieKeyGenerator' to create SESSION_KEY in enviromental variable ")
 	}
 
 	port := os.Getenv("PORT")
@@ -30,15 +28,13 @@ func main() {
 		port = "3000"
 	}
 	models.Init()
-	utils.LoadTemplates("templates/*.html")
+	utils.LoadTemplates("web/Templates/*.html")
 
-	templates = template.Must(template.ParseGlob("templates/*.html"))
+	templates = template.Must(template.ParseGlob("web/Templates/*.html"))
 
 	r := routes.NewRouter()
 
 	http.Handle("/", r)
-
-	//fmt.Println(readCurDir(""))
 
 	http.ListenAndServe(":"+port, nil)
 }
@@ -54,4 +50,22 @@ func main() {
 // 		return
 // 	}
 // 	w.Write([]byte(username))
+// }
+
+// func readCurDir(path string) [50]string {
+// 	file, err := os.Open("./" + path)
+// 	if err != nil {
+// 		log.Fatalf("failed opening directory: %s", err)
+// 	}
+// 	defer file.Close()
+
+// 	list, _ := file.Readdirnames(0) // 0 to read all files and folders
+
+// 	fileNum := 0
+// 	files := [50]string{}
+// 	for _, name := range list {
+// 		files[fileNum] = name
+// 		fileNum++
+// 	}
+// 	return files
 // }

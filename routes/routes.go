@@ -26,11 +26,8 @@ func NewRouter() *mux.Router {
 	r.HandleFunc("/application", applicationGetHandler).Methods("GET")
 	r.HandleFunc("/profile", applicationGetHandler).Methods("GET")
 
-	fsstyle := http.FileServer(http.Dir("./styles/"))
-	r.PathPrefix("/styles/").Handler(http.StripPrefix("/styles/", fsstyle))
-
-	fsimages := http.FileServer(http.Dir("./images/"))
-	r.PathPrefix("/images/").Handler(http.StripPrefix("/images/", fsimages))
+	fsstyle := http.FileServer(http.Dir("./web/styles/"))
+	r.PathPrefix("/web/styles/").Handler(http.StripPrefix("/web/styles/", fsstyle))
 
 	//change with webpack
 	fsjs := http.FileServer(http.Dir("./dist/"))
@@ -64,14 +61,14 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var allFiles []string
-	files, err := ioutil.ReadDir("./templates")
+	files, err := ioutil.ReadDir("./web/templates")
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, file := range files {
 		filename := file.Name()
 		if strings.HasSuffix(filename, ".tmpl") {
-			allFiles = append(allFiles, "./templates/"+filename)
+			allFiles = append(allFiles, "./web/templates/"+filename)
 		}
 	}
 
@@ -88,14 +85,14 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var allFiles []string
-	files, err := ioutil.ReadDir("./templates")
+	files, err := ioutil.ReadDir("./web/templates")
 	if err != nil {
 		fmt.Println(err)
 	}
 	for _, file := range files {
 		filename := file.Name()
 		if strings.HasSuffix(filename, ".tmpl") {
-			allFiles = append(allFiles, "./templates/"+filename)
+			allFiles = append(allFiles, "./web/templates/"+filename)
 		}
 	}
 
