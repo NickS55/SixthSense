@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
-import { multiplier, scene } from './index';
+import { multiplier, scene } from "./init";
 
 const loader = new GLTFLoader();
 export var baseballs_GLTF: THREE.Group;

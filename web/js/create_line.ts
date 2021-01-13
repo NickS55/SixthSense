@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { multiplier, scene } from './index';
+import { multiplier, scene } from "./init";
 import { LineBasicMaterial } from 'three';
 
 /*
