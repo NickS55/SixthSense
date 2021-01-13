@@ -12,6 +12,6 @@ import (
 // crypto/rand or securecookie.GenerateRandomKey(32) and persist the result.
 
 //Store - stores cookies
-var Store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY"))) //learn about how to secure cookies
+var Store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
 
 // https://github.com/gorilla/securecookie

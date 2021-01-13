@@ -7,11 +7,13 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/gorilla/mux"
+
 	"../middleware"
+
 	"../models"
 	"../sessions"
 	"../utils"
-	"github.com/gorilla/mux"
 )
 
 //NewRouter - the router for the website

@@ -30,7 +30,8 @@ func NewUser(username string, hash []byte) (*User, error) {
 		return nil, err
 	}
 	key := fmt.Sprintf("user:%d", id)
-	pipe := client.Pipeline() //allows sending multiple commands to redis wihtout a response for everyone
+
+	pipe := client.Pipeline() //Pipeline allows sending multiple commands to Redis at a time without each command blocking
 	pipe.HSet(ctx, key, "id", id)
 	pipe.HSet(ctx, key, "username", username)
 	pipe.HSet(ctx, key, "hash", hash)
