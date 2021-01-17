@@ -16,14 +16,13 @@ import { LineBasicMaterial } from 'three';
 * - ground to sky: z-axis
 * - 3rd base to 1st base: x-axis
 *
-* Assumtions: 
+* Assumtions that are not true: 
 * - The magnus force is constant (this is not true, but is an assumtion that I am assuming as of right now.)
 * - the ball is thrown at Tropicana Field
-* - assuming drag coeffient is constant (.3)
+* - assuming drag coeffient is constant (.3 this is not true)
 * - assuming the spin of the baseball does not effect drag ( it does )
 *
 * to do:
-* - right now, magnus acceleration is not updating. needs to be fixed.
 * - add thick lines as an option?
 */
 
@@ -49,7 +48,7 @@ import { LineBasicMaterial } from 'three';
 
 
      var deltaTime: number;
-     deltaTime = 100;
+     deltaTime = 1000;
 
       radius = 1.43/12; //feet
       dragCoefficient = .3; 
@@ -102,18 +101,14 @@ import { LineBasicMaterial } from 'three';
         y += velY / deltaTime ;
         z += velZ / deltaTime ;
 
-        totalV = Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2) + Math.pow(velZ, 2));
-        
         accMagnusXhelper = accMagnusX / Math.pow(totalV, 2);
         accMagnusYhelper = accMagnusY / Math.pow(totalV, 2);
         accMagnusZhelper = accMagnusZ / Math.pow(totalV, 2);
 
-         console.log( "coordinates: " + x + ',' + y + ',' + z);
-        // console.log( "velocities: " + velX + ',' + velY + ',' + velZ);
-        // console.log( "accelerations: " + accX + ',' + accY + ',' + accZ);
-        // console.log( "accelMag: " + accMagnusX + ',' + accMagnusY + ',' + accMagnusZ);
-        // console.log(totalV);
+        totalV = Math.sqrt(Math.pow(velX, 2) + Math.pow(velY, 2) + Math.pow(velZ, 2));
+
     }
+    console.log("coordinates: " + x + ", " + y + ", " + z)
 
     points.push( new THREE.Vector3(x * multiplier, y * multiplier, z * multiplier) );
     

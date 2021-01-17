@@ -7,14 +7,21 @@
 		</style>
 	</head>
 	<body>
-		<div class = "view_menu">
-			<button id = "Pitcher_View"> Pitcher </button>
-			<div class = "row2">
-				<button id = "RHB_View"> RHB </button>
-				<button id = "LHB_View"> LHB </button>
-			<div>
-			<button id = "Catcher_View"> Catcher </button>
-		</div>
-		<script src = "../dist/index.bundle.js"></script>
+	<div class = "view_menu">
+		<button id = "Pitcher_View"> Pitcher </button>
+		<div>
+			<button id = "RHB_View"> RHB </button>
+			<button id = "LHB_View"> LHB </button>
+		<div>
+		<button id = "Catcher_View"> Catcher </button>
+	</div>
+	<div class = "sidebar">
+		<p><b>Change the charecteristics of the pitch to see how it affects the flight of the ball</b></p>
+		<p><label for = "mph">MPH</label><input type = "text" id = "mph" value = "90"/> </p>
+		<p><label for = "rpm">RPM</label><input type = "text" id = "rpm" value = "2500"/> </p>
+		<p><label for = "TSpin">Transverse Spin (%)</label><input type = "text" id = "TSpin" value = ".87"/> </p>
+		<p><label for = "Axis">Spin Axis (Degrees)</label><input type = "text" id = "Axis" value = "90"/> </p>
+	</div>
+	<script src = "../dist/index.bundle.js"></script>
 	</body>
 </html>
