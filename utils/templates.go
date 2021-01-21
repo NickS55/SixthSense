@@ -6,8 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"strings"
-
-	"../models"
 )
 
 var templates *template.Template
@@ -31,16 +29,10 @@ func GetFiles() *template.Template {
 }
 
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
-	updates, err := models.GetAllUpdates()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
 	templates := GetFiles()
 
 	s2 := templates.Lookup("index.tmpl")
-	s2.ExecuteTemplate(w, "index", updates)
+	s2.ExecuteTemplate(w, "index", nil)
 }
 
 //LoadTemplates - Loads Template for use

@@ -41,26 +41,20 @@ func NewRouter() *mux.Router {
 }
 
 func userGetHandler(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	username := vars["username"]
-	user, err := models.GetUserByUsername(username)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
-	userID, err := user.GetID()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
-	updates, err := models.GetUpdates(userID)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
+	//vars := mux.Vars(r)
+	//username := vars["username"]
+	//user, err := models.GetUserByUsername(username)
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte("Internal server error"))
+	// 	return
+	// }
+	// userID, err := user.GetID()
+	// if err != nil {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte("Internal server error"))
+	// 	return
+	// }
 
 	var allFiles []string
 	files, err := ioutil.ReadDir("./web/templates")
@@ -74,17 +68,11 @@ func userGetHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	utils.ExecuteTemplateTmpl(w, "index.tmpl", "index", updates)
+	utils.ExecuteTemplateTmpl(w, "index.tmpl", "index", nil)
 
 }
 
 func indexGetHandler(w http.ResponseWriter, r *http.Request) {
-	updates, err := models.GetAllUpdates()
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
 
 	var allFiles []string
 	files, err := ioutil.ReadDir("./web/templates")
@@ -103,27 +91,20 @@ func indexGetHandler(w http.ResponseWriter, r *http.Request) {
 	templates, err = template.ParseFiles(allFiles...)
 
 	s2 := templates.Lookup("index.tmpl")
-	s2.ExecuteTemplate(w, "index", updates)
+	s2.ExecuteTemplate(w, "index", nil)
 
 }
 
 func indexPostHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := sessions.Store.Get(r, "session")
-	untypedUserID := session.Values["user_id"]
-	userID, ok := untypedUserID.(int64)
-	if !ok {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
+	// session, _ := sessions.Store.Get(r, "session")
+	// untypedUserID := session.Values["user_id"]
+	// userID, ok := untypedUserID.(int64)
+	// if !ok {
+	// 	w.WriteHeader(http.StatusInternalServerError)
+	// 	w.Write([]byte("Internal server error"))
+	// 	return
+	// }
 	r.ParseForm()
-	body := r.PostForm.Get("update")
-	err := models.PostUpdate(userID, body)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
-	}
 	http.Redirect(w, r, "/", 302)
 }
 
@@ -135,6 +116,7 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
+
 	user, err := models.AuthenticateUser(username, password)
 	if err != nil {
 		switch err {
@@ -168,11 +150,16 @@ func registerPostHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	username := r.PostForm.Get("username")
 	password := r.PostForm.Get("password")
-	err := models.RegisterUser(username, password)
+	email := r.PostForm.Get("email")
+	dateOfBirth := r.PostForm.Get("dateOfBirth")
+	name := r.PostForm.Get("name")
+
+	err := models.RegisterUser(username, password, email, dateOfBirth, name)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
-		return
+		w.Write([]byte("Internal server error: Unable to register user"))
+		panic(err.Error())
+
 	}
 	http.Redirect(w, r, "/login", 302)
 }
