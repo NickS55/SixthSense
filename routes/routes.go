@@ -128,13 +128,14 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 		default:
 			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Internal server error: Login Failed for unknown reason"))
+			w.Write([]byte("Internal server error: Login Failed while authenicating user"))
 		}
 		return
 	}
 	userID, err := user.GetID()
 	if err != nil {
 		log.Println(err)
+		log.Println("get id")
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("Internal server error : Login Failed for unknown reason"))
 		return

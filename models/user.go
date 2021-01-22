@@ -3,12 +3,14 @@ package models
 import (
 	"context"
 	"crypto/rand"
+	"database/sql"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"log"
 	"time"
 
+	"github.com/go-redis/redis"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -55,7 +57,7 @@ func NewUserRedis(id string, username string, hash []byte, email string, dateOfB
 
 //NewUser - creates a new User
 func NewUser(username string, hash []byte, email string, dateOfBirth string, name string) error {
-	id, err := generateRandom64BitID(8)
+	id, err := GenerateRandom64BitID(8)
 	if err != nil {
 		return err
 	}
@@ -116,30 +118,45 @@ func GetUserByID(id string) (*User, error) {
 
 //GetUserByUsername - uses username as key
 func GetUserByUsername(username string) (*User, error) {
-	id := GetUserByUsernameRedis(username)
+	id, err := GetUserByUsernameRedis(username)
+	if err == nil {
+		return GetUserByID(id)
+	}
+	id, err = GetUserByUsernameMySQL(username)
+	if err != nil {
+		return nil, err
+	}
 	return GetUserByID(id)
 }
 
 //GetUserByUsernameMySQL - gets a user id from username searching mySQL database
-func GetUserByUsernameMySQL(username string) (int64, error) {
-	var id (int64)
+func GetUserByUsernameMySQL(username string) (string, error) {
+	var id (string)
 	err := db.QueryRow("select user_id from user where username = ?", username).Scan(&id)
-	if err != nil {
-		return 0, err
+	if err == sql.ErrNoRows {
+		return "", ErrUserNotFound
+	} else if err != nil {
+		return "", err
 	}
 	return id, nil
 }
 
 //GetUserByUsernameRedis - usname to get user_id from redis and searches Redis database
-func GetUserByUsernameRedis(username string) string {
+func GetUserByUsernameRedis(username string) (string, error) {
 	ctx := context.TODO()
 	var id (string)
-	client.HGet(ctx, "user:by-username", username).Scan(&id)
+	err := client.HGet(ctx, "user:by-username", username).Scan(&id)
+	if err == redis.Nil {
+		return "", ErrUserNotFound
+	} else if err != nil {
+		return "", err
+	}
 	log.Println(id)
-	return id
+	return id, nil
 }
 
-func uniqueID(encodedID string) bool {
+//UniqueID - takes a string (encoded id) and returns true if the id is unique and false if it is a duplicate
+func UniqueID(encodedID string) bool {
 	// Store query result in this variable
 	var idTaken bool
 	// Call a stored procedure that checks if the ID already exists
@@ -157,8 +174,9 @@ func uniqueID(encodedID string) bool {
 }
 
 //https://medium.com/@jcox250/generating-prefixed-base64-ids-in-golang-e7731bd89c1b
-//generateRandom64BitID - generates 64bit id of size size to use as user id
-func generateRandom64BitID(size int) (string, error) {
+
+//GenerateRandom64BitID - generates 64bit id of size size to use as user id
+func GenerateRandom64BitID(size int) (string, error) {
 
 	b := make([]byte, size)
 	// Read size number of bytes into b
@@ -170,7 +188,7 @@ func generateRandom64BitID(size int) (string, error) {
 	encoded := base64.URLEncoding.EncodeToString(b)
 
 	//Check if id is already taken
-	uniqueID(encoded)
+	UniqueID(encoded)
 
 	//optional addition - addinng a prefix to tell what base64 id is for
 	return encoded, nil
