@@ -9,7 +9,6 @@ import (
 	"log"
 	"time"
 
-	"github.com/go-redis/redis"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -25,50 +24,63 @@ type User struct {
 	key string //key for redis db
 }
 
-//NewUser - creates a new User
-func NewUser(username string, hash []byte, email string, dateOfBirth string, name string) (*User, error) {
-	ctx := context.TODO()
+//NewUserMYSQL - add User to MYSQL DB
+func NewUserMYSQL(id string, username string, hash []byte, email string, dateOfBirth string, name string) error {
+	t := time.Now()
+	tSQL := t.Format("2006-01-02 15:04:05")
 
-	//id, err := client.Incr(ctx, "user:next-id").Result()
-	id, err := generateRandom64BitID(8)
+	_, err := db.Exec("INSERT INTO user (user_id, name, birthday, password_hash, last_login, username, date_created, team_account, active ) VALUES(?,?,?,?,?,?,?,?,?) ", id, name, dateOfBirth, string(hash), tSQL, username, tSQL, 0, 1)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
+	return nil
+}
+
+//NewUserRedis - add User to Redis DB
+func NewUserRedis(id string, username string, hash []byte, email string, dateOfBirth string, name string) error {
+	ctx := context.TODO()
 	key := fmt.Sprintf("user:%s", id)
 	pipe := client.Pipeline() //Pipeline allows sending multiple commands to Redis at a time without each command blocking
 	pipe.HSet(ctx, key, "id", id)
 	pipe.HSet(ctx, key, "username", username)
 	pipe.HSet(ctx, key, "hash", hash)
 	pipe.HSet(ctx, "user:by-username", username, id)
-	_, err = pipe.Exec(ctx)
+	_, err := pipe.Exec(ctx)
 	if err != nil {
-		return nil, err
+		return err
 	}
-	log.Println(id)
+	return nil
+}
 
-	t := time.Now()
-	tSQL := t.Format("2006-01-02 15:04:05")
-
-	dbUser, err := db.Exec("INSERT INTO user (user_id, name, birthday, password_hash, last_login, username, date_created, team_account, active ) VALUES(?,?,?,?,?,?,?,?,?) ", id, name, dateOfBirth, string(hash), tSQL, username, tSQL, 0, 1)
-	//rows, err := db.Query("select user_id from user")
+//NewUser - creates a new User
+func NewUser(username string, hash []byte, email string, dateOfBirth string, name string) error {
+	id, err := generateRandom64BitID(8)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	affectedRows, err := dbUser.RowsAffected()
+	err = NewUserRedis(id, username, hash, email, dateOfBirth, name)
 	if err != nil {
-		return nil, err
+		log.Println("error when adding new user to redis database")
+		log.Println(err)
 	}
-	log.Println(affectedRows)
 
-	return &User{key}, nil
+	err = NewUserMYSQL(id, username, hash, email, dateOfBirth, name)
+	if err != nil {
+		log.Println("error when adding new user to MYSQL database")
+		log.Println(err)
+	}
+
+	return nil
 }
 
 //GetID - get user id
-func (user *User) GetID() (int64, error) {
+func (user *User) GetID() (string, error) {
 	ctx := context.TODO()
-	return client.HGet(ctx, user.key, "id").Int64()
+	var id (string)
+	client.HGet(ctx, user.key, "id").Scan(&id)
+	return id, nil
 }
 
 //GetUsername - gets username
@@ -97,21 +109,34 @@ func (user *User) Authenticate(password string) error {
 }
 
 // GetUserByID - returs user from id
-func GetUserByID(id int64) (*User, error) {
-	key := fmt.Sprintf("user:%d", id)
+func GetUserByID(id string) (*User, error) {
+	key := fmt.Sprintf("user:%s", id)
 	return &User{key}, nil
 }
 
 //GetUserByUsername - uses username as key
 func GetUserByUsername(username string) (*User, error) {
-	ctx := context.TODO()
-	id, err := client.HGet(ctx, "user:by-username", username).Int64()
-	if err == redis.Nil {
-		return nil, ErrUserNotFound
-	} else if err != nil {
-		return nil, err
-	}
+	id := GetUserByUsernameRedis(username)
 	return GetUserByID(id)
+}
+
+//GetUserByUsernameMySQL - gets a user id from username searching mySQL database
+func GetUserByUsernameMySQL(username string) (int64, error) {
+	var id (int64)
+	err := db.QueryRow("select user_id from user where username = ?", username).Scan(&id)
+	if err != nil {
+		return 0, err
+	}
+	return id, nil
+}
+
+//GetUserByUsernameRedis - usname to get user_id from redis and searches Redis database
+func GetUserByUsernameRedis(username string) string {
+	ctx := context.TODO()
+	var id (string)
+	client.HGet(ctx, "user:by-username", username).Scan(&id)
+	log.Println(id)
+	return id
 }
 
 func uniqueID(encodedID string) bool {
@@ -160,7 +185,7 @@ func RegisterUser(username string, password string, email string, dateOfBirth st
 		return err
 	}
 
-	_, err = NewUser(username, hash, email, dateOfBirth, name)
+	err = NewUser(username, hash, email, dateOfBirth, name)
 	return err
 }
 

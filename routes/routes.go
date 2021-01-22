@@ -3,6 +3,7 @@ package routes
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strings"
 	"text/template"
@@ -125,15 +126,17 @@ func loginPostHandler(w http.ResponseWriter, r *http.Request) {
 		case models.ErrInvalidLogin:
 			utils.ExecuteTemplate(w, "login.html", "invalid login")
 		default:
+			log.Println(err)
 			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Internal server error"))
+			w.Write([]byte("Internal server error: Login Failed for unknown reason"))
 		}
 		return
 	}
 	userID, err := user.GetID()
 	if err != nil {
+		log.Println(err)
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Internal server error"))
+		w.Write([]byte("Internal server error : Login Failed for unknown reason"))
 		return
 	}
 	session, _ := sessions.Store.Get(r, "session")
